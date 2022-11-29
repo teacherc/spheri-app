@@ -16,7 +16,7 @@
 
 ## Description
 
-Public app: http://spheri.app
+Public app (forthcoming - early Dec 2022): http://spheri.app
 
 Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉. 
 
@@ -34,21 +34,15 @@ I also built this project so I could learn Python, Flask, git/GitHub, Bootstrap,
 
 ## Repo Overview
 
-├── README.md
-├── LICENSE.md
-├── requirements.txt
-├── main.py
-├── test_main.py
-├── app.yaml
-├── code_dict.py
-├── templates
-│   ├── empty2.html
-│   ├── error2.html
-│   ├── form.html
-│   ├── layout.html
-└── assets
-    ├── images
-      └──recommendation.png
+README.md
+LICENSE.md
+requirements.txt
+main.py
+test_main.py
+app.yaml
+code_dict.py
+templates (/empty2.html, /error2.html, /form.html, /layout.html)
+assets (images/recommendation.png)
 
 ## Installation
 
