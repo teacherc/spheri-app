@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+<!doctype html>
+<html lang="en">
+{% block head %}
+    {{ super() }}
+{% endblock %}
+<body>
+    {% block jumbo %}
+    <div class="alert alert-danger" role="alert">
+        {{ test }}
+            </div>
+    {{ super() }}
+    {% endblock %}
+    <div>
+    {% block song %}
+    {% endblock %}
+</body>
+{% block footer %}
+    {{ super() }}
+{% endblock %}
