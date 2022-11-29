@@ -6,6 +6,8 @@ import requests
 import config
 import code_dict
 import random
+import sys
+sys.path.insert(0, 'lib')
 
 app = Flask(__name__)
 
@@ -232,4 +234,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
