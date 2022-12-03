@@ -1,2 +1,5 @@
 config.py
 session_notes.md
+appengine_config.py
+app.yaml
+lib/
