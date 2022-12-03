@@ -16,11 +16,10 @@
 
 ## Description
 
-Public app: https://spheri.uk.r.appspot.com/
+Link to the deployed web app: https://spheri.app/ 
+Alternative link: https://spheri.uk.r.appspot.com/
 
-Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉. 
-
-This is my first public programming project. I decided to learn how to code when I was laid off from my startup job in mid-October 2022. I set the goal of deploying this app publicly by December 1, 2022.
+Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉.
 
 ### Motivation
 
@@ -30,7 +29,7 @@ This app solves a problem my wife and I have. There is so much music on Spotify,
 
 ### Learning
 
-I also built this project so I could learn Python, Flask, git/GitHub, Bootstrap, APIs, unit testing, Google Cloud, and related technologies. I have been teaching myself to code since I was laid off from my startup job in mid-October 2022. After reading the first six chapters of *Automate the Boring Stuff with Python* and doing related exercises in *Python Exercises, Gently Explained*, I wanted to do my first public project.
+I also built this project so I could cement my Python, Flask, git/GitHub, Bootstrap, APIs, unit testing, and Google Cloud deployment skills.
 
 ## Repo Overview
 
@@ -117,11 +116,13 @@ A user can enter a valid U.S. zipcode, submit the zipcode, and receive a readout
 
 ## Credits
 
-Useful tutorials:
+Useful links:
 - Cory Schafer's Flask tutorial [https://www.youtube.com/watch?v=MwZwr5Tvyxo&list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH]
 - Bukola's Automate Spotify with Python [https://www.youtube.com/watch?v=7J_qcttfnJA]
 - Freecodecamp's APIs for Beginners [https://www.youtube.com/watch?v=GZvSYJDk-us]
 - Automate the Boring Stuff with Python [https://automatetheboringstuff.com/#toc]
+- Marwonn's Spotify Playlist Analyzer [https://github.com/marwonn/spotify-playlist-generator-analyzer]
+- Special thanks to my Code Mentor Greg [https://www.codementor.io/@ggorlen]. I had a thorny design issue because I didn't know I was going to use Flask when I started the project. Greg gave me strategies for how to refactor my existing code to include Flask. I was able to do the rest of the project without issues after a few pointers. 
 
 ## License
 
