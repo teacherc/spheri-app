@@ -1,12 +1,15 @@
+import os
 from flask import Flask
 from flask import request, render_template
 import re
 import base64
 import requests
-import config
 import code_dict
 import random
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
 sys.path.insert(0, 'lib')
 
 app = Flask(__name__)
@@ -18,7 +21,8 @@ def validate_zipcode(zipcode):
 
 def weather_from(valid_zipcode):
     # This function calls the WeatherStack API and stores the response
-    params = {"access_key": config.access_key, "query": valid_zipcode, "units": "f"}
+    access_key = os.getenv('ACCESS_KEY')
+    params = {"access_key": access_key, "query": valid_zipcode, "units": "f"}
 
     api_result = requests.get("http://api.weatherstack.com/current", params)
     weather = api_result.json()
@@ -106,7 +110,9 @@ def authorization_spotify():
     data = {}
 
     # Encode as Base 64
-    message = f"{config.client_id}:{config.client_secret}"
+    client_id = os.getenv('CLIENT_ID')
+    client_secret = os.getenv('CLIENT_SECRET')
+    message = f"{client_id}:{client_secret}"
     messageBytes = message.encode("ascii")
     base64Bytes = base64.b64encode(messageBytes)
     base64Message = base64Bytes.decode("ascii")
@@ -234,4 +240,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
