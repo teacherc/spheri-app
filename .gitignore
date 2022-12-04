@@ -1,5 +1,13 @@
 config.py
-session_notes.md
 appengine_config.py
 app.yaml
 lib/
+.DS_Store
+.gcloudignore
+Dockerfile
+*.md
+*.pyc
+*.pyo
+.git/
+.gitignore
+__pycache__

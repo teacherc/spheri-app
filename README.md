@@ -16,10 +16,11 @@
 
 ## Description
 
+Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉.
+
 Link to the deployed web app: https://spheri.app/ 
 Alternative link: https://spheri.uk.r.appspot.com/
-
-Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉.
+Link to r/Python post: https://www.reddit.com/r/Python/comments/zb6ro9/i_got_laid_off_in_midoctober_and_decided_to_teach/
 
 ### Motivation
 
@@ -122,7 +123,7 @@ Useful links:
 - Freecodecamp's APIs for Beginners [https://www.youtube.com/watch?v=GZvSYJDk-us]
 - Automate the Boring Stuff with Python [https://automatetheboringstuff.com/#toc]
 - Marwonn's Spotify Playlist Analyzer [https://github.com/marwonn/spotify-playlist-generator-analyzer]
-- Special thanks to my Code Mentor Greg [https://www.codementor.io/@ggorlen]. I had a thorny design issue because I didn't know I was going to use Flask when I started the project. Greg gave me strategies for how to refactor my existing code to include Flask. I was able to do the rest of the project without issues after a few pointers. 
+- Many thanks to my Code Mentor Greg [https://www.codementor.io/@ggorlen]. I had a thorny design issue because I didn't know I was going to use Flask when I started the project. Greg gave me strategies for how to refactor my existing code to include Flask. I was able to do the rest of the project without issues after a few pointers.  
 
 ## License
 
