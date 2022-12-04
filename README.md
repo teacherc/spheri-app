@@ -19,8 +19,10 @@
 Spheri is a web app that uses local weather information to generate song recommendations. Someone experiencing thundersnow can expect a different recommendation than someone experiencing clear conditions at 72℉.
 
 Link to the deployed web app: https://spheri.app/ 
+
 Alternative link: https://spheri.uk.r.appspot.com/
-Link to r/Python post: https://www.reddit.com/r/Python/comments/zb6ro9/i_got_laid_off_in_midoctober_and_decided_to_teach/
+
+Link to r/Python post (500+ upvotes, 80 comments!): https://www.reddit.com/r/Python/comments/zb6ro9/i_got_laid_off_in_midoctober_and_decided_to_teach/
 
 ### Motivation
 
