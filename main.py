@@ -21,8 +21,8 @@ def validate_zipcode(zipcode):
 
 def weather_from(valid_zipcode):
     # This function calls the WeatherStack API and stores the response
-    access_key = os.getenv('ACCESS_KEY')
-    params = {"access_key": access_key, "query": valid_zipcode, "units": "f"}
+    ACCESS_KEY = os.getenv('ACCESS_KEY')
+    params = {"access_key": ACCESS_KEY, "query": valid_zipcode, "units": "f"}
 
     api_result = requests.get("http://api.weatherstack.com/current", params)
     weather = api_result.json()
@@ -33,47 +33,31 @@ def weather_from(valid_zipcode):
     return weather_data
 
 def valence_function(weather_data):
+    mood_valence_dict = {
+    "intense": (0, 0.3),
+    "moody": (0.2, 0.5),
+    "lovely": (0.7, 1),
+    "chill": (0.5, 0.7),
+    "moderate": (0.4, 0.6),
+    "very_intense": (0, 0.3),
+    "whimsical": (0.8, 1),
+    }
+    code_dict = {
+        "intense": (386, 377,371),
+        "moody": (248, 143),
+        "lovely": (116, 113),
+        "chill": (296, 293),
+        "moderate": (374, 362,317),
+        "very_intense": (395, 389),
+        "whimsical": (368, 353),
+    }
+    
     # This function uses the 'weather_code' to set the 'valence' parameter
-    if str(weather_data["weather"]["current"]["weather_code"]) in code_dict.lovely_dict:
-        min_valence = 0.7
-        max_valence = 1
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"])
-        in code_dict.intense_dict
-    ):
-        min_valence = 0.3
-        max_valence = 0.6
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"]) in code_dict.moody_dict
-    ):
-        min_valence = 0.2
-        max_valence = 0.5
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"]) in code_dict.chill_dict
-    ):
-        min_valence = 0.5
-        max_valence = 0.7
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"])
-        in code_dict.moderate_dict
-    ):
-        min_valence = 0.4
-        max_valence = 0.6
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"])
-        in code_dict.very_intense_dict
-    ):
-        min_valence = 0
-        max_valence = 0.3
-    elif (
-        str(weather_data["weather"]["current"]["weather_code"])
-        in code_dict.whimsical_dict
-    ):
-        min_valence = 0.8
-        max_valence = 1
-    else:
-        pass
-
+    weather_code = weather_data["weather"]["current"]["weather_code"]
+    valence = [mood_valence_dict[k] for k, v in code_dict.items() if weather_code in [v][0]]
+    min_valence, max_valence = valence
+    print(min_valence, max_valence)
+    
     return min_valence, max_valence
 
 
@@ -127,7 +111,7 @@ def authorization_spotify():
     return token
 
 
-def spotify(token, min_valence, max_valence, weather_genre):
+def spotify(token, valence, weather_genre):
     # This function generates the recommendation based on variables derived from the weather
     BASE_URL = "https://api.spotify.com/v1/recommendations"
 
@@ -135,8 +119,8 @@ def spotify(token, min_valence, max_valence, weather_genre):
         "limit": 50,
         "market": "US",
         "seed_genres": weather_genre,
-        "min_valence": min_valence,
-        "max_valence": max_valence,
+        "min_valence": valence[0],
+        "max_valence": valence[1],
         "min_instrumentalness": 0.5,
         "max_instrumentalness": 1,
     }
@@ -200,8 +184,7 @@ def say_recommendation(spotify_data, weather_data):
 @app.route("/")
 def index():
     zipcode = request.args.get("zipcode", "")
-    min_valence = ""
-    max_valence = ""
+    valence = []
     weather_genre = ""
     token = []
     final_recommendation = {}
@@ -223,10 +206,10 @@ def index():
                 "error2.html",
                 test="Weather API returned an incomplete response. Please re-enter a valid zipcode.",
             )
-        min_valence, max_valence = valence_function(weather_data)
+        valence = valence_function(weather_data)
         weather_genre = genre_function(weather_data)
         token = str(authorization_spotify())
-        spotify_data = spotify(token, min_valence, max_valence, weather_genre)
+        spotify_data = spotify(token, valence, weather_genre)
         if spotify_data["spotify_status"] != 200:
             return render_template(
                 "error2.html",
