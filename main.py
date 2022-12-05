@@ -45,24 +45,20 @@ def valence_function(weather_data):
 def genre_function(weather_data):
     # This genre takes the 'feelslike' information to set the 'genre' parameter
     weather_genre = ""
-    if int(weather_data["weather"]["current"]["feelslike"]) < 45:
-        weather_genre = "jazz,classical"
-    elif (
-        int(weather_data["weather"]["current"]["feelslike"]) > 44
-        and int(weather_data["weather"]["current"]["feelslike"]) <= 70
-    ):
-        weather_genre = "trip-hop,folk,chill,ambient"
-    elif (
-        int(weather_data["weather"]["current"]["feelslike"]) > 70
-        and int(weather_data["weather"]["current"]["feelslike"]) <= 79
-    ):
-        weather_genre = "bossanova,soul,jazz"
-    elif (
-        int(weather_data["weather"]["current"]["feelslike"]) > 79
-        and int(weather_data["weather"]["current"]["feelslike"]) < 100
-    ):
+    feelslike = int(weather_data["weather"]["current"]["feelslike"]) 
+    if -100 <= feelslike <15:
+        weather_genre = "classical"
+    if 15 <= feelslike < 40:
+        weather_genre = "jazz"
+    if 40 <= feelslike < 60:
+        weather_genre = "trip-hop,ambient,chill"
+    if 60 <= feelslike < 75:
+        weather_genre = "folk"
+    if 75 <= feelslike < 85:
+        weather_genre = "bossanova,soul"
+    if 85 <= feelslike < 100:
         weather_genre = "synth-pop,indie-pop,soul"
-    elif int(weather_data["weather"]["current"]["feelslike"]) < 99:
+    if feelslike > 99:
         weather_genre = "electronic,dance,dancehall,disco,breakbeat"
         
     return weather_genre
@@ -121,8 +117,6 @@ def spotify(token, min_valence, max_valence, weather_genre):
         "spotify_response": spotify_response,
         "random_song": random_song,
     }
-
-    #print(spotify_data)
     
     return spotify_data
 
