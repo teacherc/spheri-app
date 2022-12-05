@@ -8,7 +8,7 @@ import random
 import sys
 from dotenv import load_dotenv
 
-load_dotenv()  # take environment variables from .env.
+load_dotenv()
 sys.path.insert(0, 'lib')
 
 app = Flask(__name__)
