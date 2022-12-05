@@ -35,7 +35,7 @@ This app solves a problem my wife and I have. There is so much music on Spotify,
 I also built this project so I could cement my Python, Flask, git/GitHub, Bootstrap, APIs, unit testing, and Google Cloud deployment skills.
 
 ## Repo Overview
-'''shell
+```shell
 ├── LICENSE.txt
 ├── README.md
 ├── app
