@@ -4,7 +4,6 @@ from flask import request, render_template
 import re
 import base64
 import requests
-import code_dict
 import random
 import sys
 from dotenv import load_dotenv
@@ -33,31 +32,13 @@ def weather_from(valid_zipcode):
     return weather_data
 
 def valence_function(weather_data):
-    mood_valence_dict = {
-    "intense": (0, 0.3),
-    "moody": (0.2, 0.5),
-    "lovely": (0.7, 1),
-    "chill": (0.5, 0.7),
-    "moderate": (0.4, 0.6),
-    "very_intense": (0, 0.3),
-    "whimsical": (0.8, 1),
-    }
-    code_dict = {
-        "intense": (386, 377,371),
-        "moody": (248, 143),
-        "lovely": (116, 113),
-        "chill": (296, 293),
-        "moderate": (374, 362,317),
-        "very_intense": (395, 389),
-        "whimsical": (368, 353),
-    }
-    
     # This function uses the 'weather_code' to set the 'valence' parameter
-    weather_code = weather_data["weather"]["current"]["weather_code"]
-    valence = [mood_valence_dict[k] for k, v in code_dict.items() if weather_code in [v][0]]
-    min_valence, max_valence = valence
-    print(min_valence, max_valence)
-    
+    from weather_moods import weatherstack_codes, spotify_valence
+    weather_code = int(weather_data["weather"]["current"]["weather_code"])
+    valence = [spotify_valence[k] for k, v in weatherstack_codes.items() if weather_code in v][0]
+    min_valence = valence[0]
+    max_valence = valence[-1]
+
     return min_valence, max_valence
 
 
@@ -83,6 +64,7 @@ def genre_function(weather_data):
         weather_genre = "synth-pop,indie-pop,soul"
     elif int(weather_data["weather"]["current"]["feelslike"]) < 99:
         weather_genre = "electronic,dance,dancehall,disco,breakbeat"
+        
     return weather_genre
 
 
@@ -111,7 +93,7 @@ def authorization_spotify():
     return token
 
 
-def spotify(token, valence, weather_genre):
+def spotify(token, min_valence, max_valence, weather_genre):
     # This function generates the recommendation based on variables derived from the weather
     BASE_URL = "https://api.spotify.com/v1/recommendations"
 
@@ -119,8 +101,8 @@ def spotify(token, valence, weather_genre):
         "limit": 50,
         "market": "US",
         "seed_genres": weather_genre,
-        "min_valence": valence[0],
-        "max_valence": valence[1],
+        "min_valence": min_valence,
+        "max_valence": max_valence,
         "min_instrumentalness": 0.5,
         "max_instrumentalness": 1,
     }
@@ -140,30 +122,20 @@ def spotify(token, valence, weather_genre):
         "random_song": random_song,
     }
 
+    #print(spotify_data)
+    
     return spotify_data
 
 
 def say_recommendation(spotify_data, weather_data):
     # This function stores the recommendation in variables
-    artist_name = spotify_data["spotify_response"]["tracks"][
-        spotify_data["random_song"]
-    ]["artists"][0]["name"]
-    name_of_song = spotify_data["spotify_response"]["tracks"][
-        spotify_data["random_song"]
-    ]["name"]
-    web_address = spotify_data["spotify_response"]["tracks"][
-        spotify_data["random_song"]
-    ]["external_urls"]["spotify"]
-    album_cover_image = spotify_data["spotify_response"]["tracks"][
-        spotify_data["random_song"]
-    ]["album"]["images"][0]["url"]
-    short_mp3_link = spotify_data["spotify_response"]["tracks"][
-        spotify_data["random_song"]
-    ]["preview_url"]
+    artist_name = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["artists"][0]["name"]
+    name_of_song = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["name"]
+    web_address = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["external_urls"]["spotify"]
+    album_cover_image = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["album"]["images"][0]["url"]
+    short_mp3_link = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["preview_url"]
     feelslike = weather_data["weather"]["current"]["feelslike"]
-    current_conditions = str(
-        weather_data["weather"]["current"]["weather_descriptions"]
-    ).strip("['']")
+    current_conditions = str(weather_data["weather"]["current"]["weather_descriptions"]).strip("['']")
     current_conditions = current_conditions.lower()
     city_name = weather_data["weather"]["location"]["name"]
 
@@ -184,7 +156,8 @@ def say_recommendation(spotify_data, weather_data):
 @app.route("/")
 def index():
     zipcode = request.args.get("zipcode", "")
-    valence = []
+    min_valence = ""
+    max_valence = ""
     weather_genre = ""
     token = []
     final_recommendation = {}
@@ -196,6 +169,7 @@ def index():
                 "error2.html", test="Your zipcode is not valid. Please try again."
             )
         weather_data = weather_from(zipcode)
+        print(weather_data)
         if weather_data["api_code"] != 200:
             return render_template(
                 "error2.html",
@@ -206,10 +180,10 @@ def index():
                 "error2.html",
                 test="Weather API returned an incomplete response. Please re-enter a valid zipcode.",
             )
-        valence = valence_function(weather_data)
+        min_valence, max_valence = valence_function(weather_data)
         weather_genre = genre_function(weather_data)
         token = str(authorization_spotify())
-        spotify_data = spotify(token, valence, weather_genre)
+        spotify_data = spotify(token, min_valence, max_valence, weather_genre)
         if spotify_data["spotify_status"] != 200:
             return render_template(
                 "error2.html",
