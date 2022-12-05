@@ -18,10 +18,10 @@ def validate_zipcode(zipcode):
     return bool(re.search(r"^[0-9]{5}(-[0-9]{4})?$", zipcode))
 
 
-def weather_from(valid_zipcode):
+def call_weather_api(valid_zipcode):
     # This function calls the WeatherStack API and stores the response
-    ACCESS_KEY = os.getenv('ACCESS_KEY')
-    params = {"access_key": ACCESS_KEY, "query": valid_zipcode, "units": "f"}
+    access_key = os.getenv('ACCESS_KEY')
+    params = {"access_key": access_key, "query": valid_zipcode, "units": "f"}
 
     api_result = requests.get("http://api.weatherstack.com/current", params)
     weather = api_result.json()
@@ -31,18 +31,18 @@ def weather_from(valid_zipcode):
 
     return weather_data
 
-def valence_function(weather_data):
+def assign_valence(weather_data):
     # This function uses the 'weather_code' to set the 'valence' parameter
-    from weather_moods import weatherstack_codes, spotify_valence
+    from constants import WEATHERSTACK_CODES, SPOTIFY_VALENCE
     weather_code = int(weather_data["weather"]["current"]["weather_code"])
-    valence = [spotify_valence[k] for k, v in weatherstack_codes.items() if weather_code in v][0]
+    valence = [SPOTIFY_VALENCE[k] for k, v in WEATHERSTACK_CODES.items() if weather_code in v][0]
     min_valence = valence[0]
     max_valence = valence[-1]
 
     return min_valence, max_valence
 
 
-def genre_function(weather_data):
+def assign_genre(weather_data):
     # This genre takes the 'feelslike' information to set the 'genre' parameter
     weather_genre = ""
     feelslike = int(weather_data["weather"]["current"]["feelslike"]) 
@@ -64,10 +64,10 @@ def genre_function(weather_data):
     return weather_genre
 
 
-def authorization_spotify():
+def get_spotify_token():
     # This function gets authorization from Spotify via client credentials
     # Establish variables
-    url = "https://accounts.spotify.com/api/token"
+    from constants import TOKEN_URL
     headers = {}
     data = {}
 
@@ -83,16 +83,15 @@ def authorization_spotify():
     headers["Authorization"] = f"Basic {base64Message}"
     data["grant_type"] = "client_credentials"
 
-    r = requests.post(url, headers=headers, data=data)
+    r = requests.post(TOKEN_URL, headers=headers, data=data)
     token = r.json()["access_token"]
 
     return token
 
 
-def spotify(token, min_valence, max_valence, weather_genre):
+def call_spotify_api(token, min_valence, max_valence, weather_genre):
     # This function generates the recommendation based on variables derived from the weather
-    BASE_URL = "https://api.spotify.com/v1/recommendations"
-
+    from constants import BASE_URL
     query_params = {
         "limit": 50,
         "market": "US",
@@ -121,7 +120,7 @@ def spotify(token, min_valence, max_valence, weather_genre):
     return spotify_data
 
 
-def say_recommendation(spotify_data, weather_data):
+def assign_recommendations(spotify_data, weather_data):
     # This function stores the recommendation in variables
     artist_name = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["artists"][0]["name"]
     name_of_song = spotify_data["spotify_response"]["tracks"][spotify_data["random_song"]]["name"]
@@ -158,35 +157,36 @@ def index():
     spotify_data = {}
 
     if zipcode:
+        from constants import ERROR_MESSAGES
         if not validate_zipcode(zipcode):
             return render_template(
-                "error2.html", test="Your zipcode is not valid. Please try again."
+                "error.html", error_message=str(ERROR_MESSAGES["INVALID_ZIPCODE"])
             )
-        weather_data = weather_from(zipcode)
+        weather_data = call_weather_api(zipcode)
         print(weather_data)
         if weather_data["api_code"] != 200:
             return render_template(
-                "error2.html",
-                test="Weather API returned an incomplete response. Please try again later.",
+                "error.html",
+                error_message=str(ERROR_MESSAGES["INCOMPLETE_WEATHERSTACK_RESPONSE"])
             )
         if "current" not in weather_data["weather"]:
             return render_template(
-                "error2.html",
-                test="Weather API returned an incomplete response. Please re-enter a valid zipcode.",
+                "error.html",
+                error_message=str(ERROR_MESSAGES["WEATHERSTACK_ZIP_ERROR"])
             )
-        min_valence, max_valence = valence_function(weather_data)
-        weather_genre = genre_function(weather_data)
-        token = str(authorization_spotify())
-        spotify_data = spotify(token, min_valence, max_valence, weather_genre)
+        min_valence, max_valence = assign_valence(weather_data)
+        weather_genre = assign_genre(weather_data)
+        token = str(get_spotify_token())
+        spotify_data = call_spotify_api(token, min_valence, max_valence, weather_genre)
         if spotify_data["spotify_status"] != 200:
             return render_template(
-                "error2.html",
-                test="The Spotify API returned an error. Please try again later.",
+                "error.html",
+                error_message=str(ERROR_MESSAGES["SPOTIFY_API_ERROR"])
             )
-        final_recommendation = say_recommendation(spotify_data, weather_data)
+        final_recommendation = assign_recommendations(spotify_data, weather_data)
 
     else:
-        return render_template("empty2.html")
+        return render_template("empty.html")
     return render_template("form.html", zipcode=zipcode, **final_recommendation)
 
 
