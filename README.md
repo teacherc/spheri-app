@@ -36,21 +36,24 @@ I also built this project so I could cement my Python, Flask, git/GitHub, Bootst
 
 ## Repo Overview
 
-- README.md
-- LICENSE.md
-- requirements.txt
-- main.py
-- test_main.py
-- app.yaml
-- code_dict.py
-- templates
-  - empty2.html
-  - error2.html
-  - form.html
-  - layout.html
-- assets
-  - images
-    - recommendation.png
+├── LICENSE.txt
+├── README.md
+├── app
+│   ├── constants.py
+│   ├── main.py
+│   ├── requirements.txt
+│   └── templates
+│       ├── empty.html
+│       ├── error.html
+│       ├── form.html
+│       └── layout.html
+├── assets
+│   └── images
+│       └── recommendation.png
+├── env.sample
+├── requirements.txt
+├── tests
+│   └── test_main.py
 
 ## Installation
 
@@ -58,38 +61,39 @@ If you want to see how the app looks to users, you can visit [http://spheri.app]
 
 To run in a local environment:
 
-1. Create and activate a Python virtual environment (if you need to install Python 3.x, visit [https://www.python.org/downloads/]):
+1. Fork the code
+2. Create and activate a Python virtual environment (if you need to install Python 3.x, visit [https://www.python.org/downloads/]):
 
 ```shell
 $ python -m venv venv
 $ source venv/bin/activate
 ```
 
-2. Update `pip` and install the required dependencies:
+3. Update `pip` and install the required dependencies:
 
 ```shell
 (venv) $ pip install -U pip
 (venv) $ pip install -r requirements.txt
 ```
 
-3. Create a '''config.py''' file with the proper keys
+4. Create a '''config.py''' file with the proper keys
 
 - Create a new app at [https://developer.spotify.com/dashboard/applications].
-- Create a 'config.py' file in the main directory of where you've downloaded the code
+- Create a '.env' file
 - Fill in the client id and client secret:
 ```python
-client_id = 'Spotify client ID'
-client_secret = 'Spotify client secret'
+CLIENT_ID=''
+CLIENT_SECRET=''
 ```
 - Sign up for a free WeatherStack API account [https://weatherstack.com/product]
-- Add your WeatherStack access key to the config file:
+- Add your WeatherStack access key to the .env file:
 ```python
-client_id = 'Spotify client ID'
-client_secret = 'Spotify client secret'
-access_key = 'WeatherStack access key'
+ACCESS_KEY=''
+CLIENT_ID=''
+CLIENT_SECRET=''
 ```
 
-4. Start the Flask server:
+5. Start the Flask server:
 
 ```shell
 (venv) $ python main.py
@@ -104,11 +108,11 @@ access_key = 'WeatherStack access key'
  * Debugger PIN: 339-986-221
  ```
 
- 5. Open a browser to the specified local address and port (Usually http://127.0.0.1:8080/. Voila! 
+ 6. Open a browser to the specified local address and port (Usually http://127.0.0.1:8080/). Voila! 
 
 ## Tests
 
-Tests are located in ```test_main.py```. After you create your virtual environment and install the required packages, you can run ```test_main.py```. 
+Tests are located in ```tests/test_main.py```. After you create your virtual environment and install the required packages, you can run ```test_main.py```. 
 
 ## Usage
 
@@ -125,7 +129,8 @@ Useful links:
 - Freecodecamp's APIs for Beginners [https://www.youtube.com/watch?v=GZvSYJDk-us]
 - Automate the Boring Stuff with Python [https://automatetheboringstuff.com/#toc]
 - Marwonn's Spotify Playlist Analyzer [https://github.com/marwonn/spotify-playlist-generator-analyzer]
-- Many thanks to my Code Mentor Greg [https://www.codementor.io/@ggorlen]. I had a thorny design issue because I didn't know I was going to use Flask when I started the project. Greg gave me strategies for how to refactor my existing code to include Flask. I was able to do the rest of the project without issues after a few pointers.  
+- Many thanks to my Code Mentor Greg [https://www.codementor.io/@ggorlen]. I had a thorny design issue because I didn't know I was going to use Flask when I started the project. Greg gave me strategies for how to refactor my existing code to include Flask. I was able to do the rest of the project without issues after a few pointers.
+- Thanks to @BurningSquid for contributing thoughtful issues!   
 
 ## License
 
