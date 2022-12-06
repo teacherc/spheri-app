@@ -163,7 +163,6 @@ def index():
                 "error.html", error_message=str(ERROR_MESSAGES["INVALID_ZIPCODE"])
             )
         weather_data = call_weather_api(zipcode)
-        print(weather_data)
         if weather_data["api_code"] != 200:
             return render_template(
                 "error.html",
@@ -191,5 +190,4 @@ def index():
 
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(host="127.0.0.1", port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)

@@ -1,5 +1,5 @@
 import unittest
-import main
+from app.main import main
 
 class TestMain(unittest.TestCase):
 #Test validate_zipcode
