@@ -1,0 +1,44 @@
+.git
+Dockerfile
+.DS_Store
+.gitignore
+.dockerignore
+compose.yaml
+
+# https://github.com/github/gitignore/blob/master/Global/macOS.gitignore
+
+# General
+*.DS_Store
+
+
+# https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
