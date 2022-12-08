@@ -6,21 +6,42 @@ import base64
 import requests
 import random
 import sys
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 sys.path.insert(0, 'lib')
 
 app = Flask(__name__)
 
 
+def access_secret_version(secret_id, version_id='latest'):
+    """
+    Access the payload for the given secret version if one exists. The version
+    can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
+    """
+
+    # Import the Secret Manager client library.
+    from google.cloud import secretmanager
+
+    # Create the Secret Manager client.
+    client = secretmanager.SecretManagerServiceClient()
+
+    # Build the resource name of the secret version.
+    name = f"{secret_id}/versions/{version_id}"
+    
+
+    # Access the secret version.
+    response = client.access_secret_version(request={"name": name})
+    
+    return response.payload.data.decode("UTF-8")
+    
 def validate_zipcode(zipcode):
     return bool(re.search(r"^[0-9]{5}(-[0-9]{4})?$", zipcode))
 
 
 def call_weather_api(valid_zipcode):
     # This function calls the WeatherStack API and stores the response
-    access_key = os.getenv('ACCESS_KEY')
+    access_key = access_secret_version('projects/44260640062/secrets/ACCESS_KEY')
     params = {"access_key": access_key, "query": valid_zipcode, "units": "f"}
 
     api_result = requests.get("http://api.weatherstack.com/current", params)
@@ -72,8 +93,8 @@ def get_spotify_token():
     data = {}
 
     # Encode as Base 64
-    client_id = os.getenv('CLIENT_ID')
-    client_secret = os.getenv('CLIENT_SECRET')
+    client_id = access_secret_version('projects/44260640062/secrets/CLIENT_ID')
+    client_secret = access_secret_version('projects/44260640062/secrets/CLIENT_SECRET')
     message = f"{client_id}:{client_secret}"
     messageBytes = message.encode("ascii")
     base64Bytes = base64.b64encode(messageBytes)
