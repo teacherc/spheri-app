@@ -37,7 +37,10 @@ I also built this project so I could cement my Python, Flask, git/GitHub, Bootst
 ## Repo Overview
 ```shell
 ├── LICENSE.txt
+├── Dockerfile
 ├── README.md
+├── .github/workflows
+│   └── ci.yml
 ├── app
 │   ├── constants.py
 │   ├── main.py
